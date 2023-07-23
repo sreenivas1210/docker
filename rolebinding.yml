@@ -1,0 +1,14 @@
+# role-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: my-role-binding
+  namespace: sree
+subjects:
+- kind: ServiceAccount
+  name: my-service-account
+  namespace: sree
+roleRef:
+  kind: Role
+  name: my-role
+  apiGroup: rbac.authorization.k8s.io
