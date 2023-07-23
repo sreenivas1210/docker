@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-dotnet6
+  namespace: sree
+spec:
+  selector:
+    app: docker-dotnet6
+  type : LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
