@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: docker-dotnet6-deployment
-  namespace: manish
+  namespace: sree
   labels:
     app: docker-dotnet6
 spec:
