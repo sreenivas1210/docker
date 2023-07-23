@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd-daemonset
-  namespace: manish
+  namespace: sree
 spec:
   selector:
     matchLabels:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fluentd
-          image: manishthota25/mani:latest
+          image: sreejags/dotnet:latest
           ports:
             - containerPort: 24224
               name: fluentd
