@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-dotnet6-deployment
+  namespace: nv1
+  labels:
+    app: docker-dotnet6
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: docker-dotnet6
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: docker-dotnet6
+    spec:
+      initContainers:
+      - name: init-setup
+        image: busybox:latest
+        command: ['sh', '-c', 'ls; pwd; sleep 10']
+        envFrom:
+        - configMapRef:
+            name: docker-dotnet6-deployment
+      containers:
+      - name: docker-dotnet6
+        image: sreejags/dotnet:latest
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+          httpGet:
+            path: /_status/healthz
+            port: 5000   # Corrected port to match the containerPort
+          initialDelaySeconds: 8
+          periodSeconds: 10
+          failureThreshold: 3  # Corrected field name
+          successThreshold: 1  # Corrected field name
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 5000   # Corrected port to match the containerPort
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        env:
+        - name: docker-dotnet6-deployment
+          valueFrom:
+            configMapKeyRef:
+              key: DB_HOST
+              name: docker-dotnet6-deployment
