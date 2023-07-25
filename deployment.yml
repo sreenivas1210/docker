@@ -54,3 +54,7 @@ spec:
                 configMapKeyRef:
                   name: docker-dotnet6-deployment
                   key: DB_HOST
+      tolerations:
+      - key: "project"
+        operator: "Exists"
+        effect: "NoSchedule"
