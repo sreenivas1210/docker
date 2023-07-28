@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-dotnet6-deployment
+  name: dotnet6-deployment
   namespace: sree
   labels:
-    app: docker-dotnet6
+    app: dotnet6
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: docker-dotnet6
+      app: dotnet6
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,19 +18,28 @@ spec:
   template:
     metadata:
       labels:
-        app: docker-dotnet6
+        app: dotnet6
     spec:
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: envi
+                  - key: environment
                     operator: In
                     values:
-                      - prod
+                      - production
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - dotnet6
+              topologyKey: "kubernetes.io/hostname"
       containers:
-        - name: docker-dotnet6
+        - name: dotnet6
           image: sreejags/dotnet:latest
           ports:
             - containerPort: 5000
@@ -52,9 +61,5 @@ spec:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: docker-dotnet6-deployment
+                  name: dotnet6-deployment
                   key: DB_HOST
-      tolerations:
-      - key: "project"
-        operator: "Exists"
-        effect: "NoSchedule"
