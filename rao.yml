@@ -1,0 +1,9 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: dotnet6-pdb
+spec:
+  selector:
+    matchLabels:
+      app: dotnet6
+  maxUnavailable: 1
